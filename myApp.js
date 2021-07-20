@@ -1,20 +1,12 @@
 require('dotenv').config();
-const { MongoClient } = require("mongodb");
+const mongoose = require('mongoose');
 
-const client = MongoClient(process.env.MONGO_URI);
 
 async function run() {
-  try {
-    // Connect the client to the server
-    await client.connect();
-    // Establish and verify connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Connected successfully to server");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
-  }
+  await mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true})
+  console.log('mongoose succesfully connected: ', !!mongoose.connection.readyState)
 }
+
 run().catch(console.dir);
 
 
