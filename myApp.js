@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 async function run() {
-  await mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true})
-  console.log('mongoose succesfully connected: ', !!mongoose.connection.readyState)
+  const db = await mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true})
+  console.log('mongoose succesfully connected: ', !!mongoose.connection.readyState);
 }
 
 run().catch(console.dir);
@@ -22,24 +22,34 @@ const readAllPersons = async () => {
     return await Person.find();
 };
 
-const createAndSavePerson = (done) => {
-  p = new Person(
-    {
-      'name': 'foo',
-      'age': 25,
-      'favoriteFoods': ['kwark', 'banana']
-    }
-  );
-  p.save(function (err, p) {
-    if (err) {
-      return console.log(err)
-    };
-    done(null, p);  // It is crucial to call the callback in the Document.save callback.
-  });
+const personProperties = {
+  'name': 'foo',
+  'age': 25,
+  'favoriteFoods': ['kwark', 'banana']
 };
 
-const createManyPeople = (arrayOfPeople, done) => {
-  done(null /*, data*/);
+const createAndSavePerson = (done) => {
+
+  p = new Person({...personProperties});
+
+  // with callback:
+  // p.save(function (err, p) {
+  //   if (err) {
+  //     return console.log(err)
+  //   };
+  //   done(null, p);  // It is crucial to call the callback in the Document.save callback (since Document.save() is an asynchronous operation).
+  // });
+
+  // with promise:
+  p.save()
+  .then(p => {done(null, p)})
+  .catch(err => {console.log(err)})
+};
+
+// with async function:
+const createManyPeople = async (arrayOfPeople, done) => {
+  const data = await Person.create(arrayOfPeople);
+  done(null, data);
 };
 
 const findPeopleByName = (personName, done) => {
