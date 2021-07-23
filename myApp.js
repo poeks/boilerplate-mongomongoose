@@ -10,7 +10,7 @@ async function run() {
 run().catch(console.dir);
 
 
-const personSchema = Schema({
+const personSchema = new Schema({
   name: {type: String, required: true},
   age: {type: Number, min: 0},
   favoriteFoods: [String],
@@ -18,8 +18,24 @@ const personSchema = Schema({
 
 let Person = mongoose.model('Person', personSchema);
 
+const readAllPersons = async () => {
+    return await Person.find();
+};
+
 const createAndSavePerson = (done) => {
-  done(null /*, data*/);
+  p = new Person(
+    {
+      'name': 'foo',
+      'age': 25,
+      'favoriteFoods': ['kwark', 'banana']
+    }
+  );
+  p.save(function (err, p) {
+    if (err) {
+      return console.log(err)
+    };
+    done(null, p);  // It is crucial to call the callback in the Document.save callback.
+  });
 };
 
 const createManyPeople = (arrayOfPeople, done) => {
@@ -83,3 +99,4 @@ exports.createManyPeople = createManyPeople;
 exports.removeById = removeById;
 exports.removeManyPeople = removeManyPeople;
 exports.queryChain = queryChain;
+exports.readAllPersons = readAllPersons;
