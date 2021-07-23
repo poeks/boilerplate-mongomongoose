@@ -114,10 +114,14 @@ const removeManyPeople = async (done) => {
   done(null, doc);
 };
 
-const queryChain = (done) => {
+const queryChain = async (done) => {
   const foodToSearch = "burrito";
-
-  done(null /*, data*/);
+  const doc = await Person
+    .find({favoriteFoods: foodToSearch})
+    .sort('name')
+    .limit(2)
+    .select('-age');
+  done(null, doc);
 };
 
 /** **Well Done !!**
