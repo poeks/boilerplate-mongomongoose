@@ -97,10 +97,10 @@ const findEditThenSave = (personId, done) => {
 //   done(null,  await Person.findById(personId));  // Need to pass verification by FreeCodeCamp.
 // };
 
-const findAndUpdate = (personName, done) => {
+const findAndUpdate = async (personName, done) => {
   const ageToSet = 20;
-
-  done(null /*, data*/);
+  const doc = await Person.findOneAndUpdate({name: personName}, {age: ageToSet}, {new: true});
+  done(null, doc);
 };
 
 const removeById = (personId, done) => {
