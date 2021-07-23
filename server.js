@@ -233,6 +233,8 @@ router.post("/find-edit-save", function (req, res, next) {
   let t = setTimeout(() => {
     next({ message: "timeout" });
   }, TIMEOUT);
+  console.log('request body posted by FreecodeCamp:')
+  console.log(req.body)
   let p = new Person(req.body);
   p.save(function (err, pers) {
     if (err) {

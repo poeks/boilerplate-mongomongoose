@@ -67,11 +67,35 @@ const findPersonById = async (personId, done) => {
   done(null, doc);
 };
 
-const findEditThenSave = (personId, done) => {
-  const foodToAdd = "hamburger";
 
-  done(null /*, data*/);
+const findEditThenSave = (personId, done) => {
+  const foodToAdd = 'hamburger';
+
+  // .findById() method to find a person by _id with the parameter personId as search key. 
+  Person.findById(personId, (err, person) => {
+    if(err) return console.log(err); 
+  
+    // Array.push() method to add "hamburger" to the list of the person's favoriteFoods
+    person.favoriteFoods.push(foodToAdd);
+
+    // and inside the find callback - save() the updated Person.
+    person.save((err, updatedPerson) => {
+      if(err) return console.log(err);
+      done(null, updatedPerson)
+    })
+  })
 };
+
+// The FreecodeCamp snippet has the __v attribute set to 1: that's why validation probably goes wrong.
+// Returns the same object
+// const findEditThenSave = async (personId, done) => {
+//   const foodToAdd = "hamburger";
+//   const person = await Person.findById(personId);
+//   person.favoriteFoods.push(foodToAdd);
+
+//   await Person.updateOne({_id: person._id}, person);
+//   done(null,  await Person.findById(personId));  // Need to pass verification by FreeCodeCamp.
+// };
 
 const findAndUpdate = (personName, done) => {
   const ageToSet = 20;
