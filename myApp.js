@@ -57,8 +57,9 @@ const findPeopleByName = async (personName, done) => {
   done(null, data);
 };
 
-const findOneByFood = (food, done) => {
-  done(null /*, data*/);
+const findOneByFood = async (food, done) => {
+  const doc = await Person.findOne({favoriteFoods: food}).exec();
+  done(null, doc);
 };
 
 const findPersonById = (personId, done) => {
